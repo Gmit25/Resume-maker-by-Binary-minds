@@ -81,10 +81,32 @@
             <input type="text" id="signupName" placeholder="John Doe">
         </div>
         <div class="form-group">
+            <label for="signupPhone">Phone Number</label>
+            <input type="tel" id="signupPhone" placeholder="+1 (555) 123-4567">
+        </div>
+        <div class="form-group">
             <label for="signupEmail">Email</label>
             <input type="email" id="signupEmail" placeholder="john@example.com">
         </div>
         <div class="form-group">
+            <label for="signupLinkedIn">LinkedIn Profile URL</label>
+            <input type="url" id="signupLinkedIn" placeholder="https://www.linkedin.com/in/username">
+        </div>
+        <div class="form-group">
+            <label for="signupGithub">GitHub Profile URL</label>
+            <input type="url" id="signupGithub" placeholder="https://github.com/username">
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div class="form-group" style="margin-bottom:0;">
+                <label for="signupCity">City</label>
+                <input type="text" id="signupCity" placeholder="San Francisco">
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+                <label for="signupState">State</label>
+                <input type="text" id="signupState" placeholder="CA">
+            </div>
+        </div>
+        <div class="form-group" style="margin-top:12px;">
             <label for="signupPassword">Password</label>
             <input type="password" id="signupPassword" placeholder="••••••••">
         </div>
@@ -94,18 +116,25 @@
     <script>
         function handleSignUp() {
             const name = document.getElementById('signupName').value.trim();
+            const phone = document.getElementById('signupPhone').value.trim();
             const email = document.getElementById('signupEmail').value.trim();
-            const password = document.getElementById('signupPassword').value; // not secure, demo only
-            if (!name || !email || !password) {
+            const linkedIn = document.getElementById('signupLinkedIn').value.trim();
+            const github = document.getElementById('signupGithub').value.trim();
+            const city = document.getElementById('signupCity').value.trim();
+            const state = document.getElementById('signupState').value.trim();
+            const password = document.getElementById('signupPassword').value;
+
+            if (!name || !phone || !email || !linkedIn || !github || !city || !state || !password) {
                 alert('Please fill in all fields.');
                 return;
             }
-            // store simple user profile in localStorage
-            const user = { name, email };
+
+            const user = { name, phone, email, linkedIn, github, city, state };
             localStorage.setItem('userProfile', JSON.stringify(user));
             localStorage.setItem('signedUp', 'true');
-            // redirect to experience question page before resume maker
             window.location.href = 'experience.html';
+        }
+    </script>
         }
     </script>
 </body>
