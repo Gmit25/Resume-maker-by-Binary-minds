@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Experience Level - Resume Maker</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            display: flex; align-items: center; justify-content: center;
+            height: 100vh; padding: 20px;
+        }
+        .card {
+            background: white; padding: 32px; border-radius: 8px;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.08); max-width: 520px; width: 100%;
+        }
+        h1 { color: #667eea; margin-bottom: 14px; text-align: center; }
+        p { color: #444; margin-bottom: 18px; text-align: center; }
+        .options { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+        .option {
+            display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+            border: 1px solid #e6e6f2; border-radius: 6px; cursor: pointer;
+        }
+        .option input { margin: 0; }
+        .btn-row { display:flex; gap:10px; }
+        .btn { flex: 1; padding: 10px 12px; border-radius: 6px; font-weight: 600; cursor: pointer; border: none; }
+        .btn-primary { background: #667eea; color: white; }
+        .btn-secondary { background: #f0f0f5; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Are you a Fresher or an Experienced professional?</h1>
+        <p>Please choose one option to continue.</p>
+
+        <div class="options">
+            <label class="option"><input type="radio" name="experienceLevel" value="Fresher"> <span>Fresher</span></label>
+            <label class="option"><input type="radio" name="experienceLevel" value="Experienced professional"> <span>Experienced professional</span></label>
+        </div>
+
+        <div class="btn-row">
+            <button class="btn btn-secondary" onclick="goBack()">Back</button>
+            <button class="btn btn-primary" onclick="saveAndContinue()">Next</button>
+        </div>
+    </div>
+
+    <script>
+        function goBack() {
+            // go back to signup if user wants to change details
+            window.location.href = 'signup.html';
+        }
+
+        function saveAndContinue() {
+            const sel = document.querySelector('input[name="experienceLevel"]:checked');
+            if (!sel) {
+                alert('Please select an option to continue.');
+                return;
+            }
+            const value = sel.value;
+
+            // merge into existing resumeData in localStorage (if present)
+            try {
+                const raw = localStorage.getItem('resumeData');
+                let data = raw ? JSON.parse(raw) : { personalInfo: {}, skills: '', experience: [], education: [], projects: [] };
+                if (!data.personalInfo) data.personalInfo = {};
+                data.personalInfo.experienceLevel = value;
+                localStorage.setItem('resumeData', JSON.stringify(data));
+            } catch (e) {
+                // fallback
+                const data = { personalInfo: { experienceLevel: value }, skills: '', experience: [], education: [], projects: [] };
+                localStorage.setItem('resumeData', JSON.stringify(data));
+            }
+
+            // navigate to resume editor/preview
+            window.location.href = 'resume.html';
+        }
+    </script>
+</body>
+</html>
