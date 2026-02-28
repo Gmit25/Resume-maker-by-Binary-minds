@@ -11,8 +11,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use('/api/auth', authRoutes);
+// authentication routes (signup, login)
+app.use('/api', authRoutes);
+// resumes collection (plural and singular endpoints)
 app.use('/api/resumes', resumeRoutes);
+app.use('/api/resume', resumeRoutes);
+// profile retrieval
 app.use('/api/profile', profileRoutes);
 
 app.get('/', (req, res) => res.json({ ok: true, message: 'Resume Maker API' }));

@@ -468,6 +468,12 @@
                 await fetchResumes();
             }
 
+            // if URL has ?load=<id>, auto-load that resume
+            const params = new URLSearchParams(window.location.search);
+            if (params.has('load')) {
+                await loadResume(params.get('load'));
+            }
+
             loadFromLocalStorage();
             setupEventListeners();
             updatePreview();
@@ -1023,7 +1029,7 @@
             if (!title) return;
 
             const payload = extractResumeData();
-            const res = await fetch('http://localhost:5000/api/resumes', {
+            const res = await fetch('http://localhost:5000/api/resume', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

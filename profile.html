@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Resume Maker</title>
+    <style>
+        body { font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif; background:#f5f5f5; margin:0; padding:0; }
+        .container { max-width:600px; margin:50px auto; background:#fff; padding:30px; border-radius:8px; box-shadow:0 2px 10px rgba(0,0,0,0.1); }
+        h1 { text-align:center; color:#667eea; }
+        .field { margin-bottom:15px; }
+        .field label { font-weight:600; display:block; margin-bottom:5px; }
+        .field span { display:block; }
+        .btn { display:inline-block; background:#667eea; color:#fff; padding:10px 15px; border-radius:4px; text-decoration:none; font-weight:600; }
+        .btn:hover { background:#5568d3; }
+        .topbar { position:fixed; top:0; left:0; right:0; background:#667eea; color:#fff; padding:10px 20px; display:flex; justify-content:space-between; align-items:center; }
+        .topbar a { color:#fff; text-decoration:none; font-weight:600; }
+    </style>
+</head>
+<body>
+    <div class="topbar">
+        <a href="user_home.html">← Dashboard</a>
+        <span>Profile</span>
+        <a href="logout.html" onclick="logout(); return false;">Logout</a>
+    </div>
+    <div class="container" style="margin-top:60px;">
+        <h1>Your Profile</h1>
+        <div id="profileData">
+            <div class="field"><label>Name</label><span id="pname"></span></div>
+            <div class="field"><label>Email</label><span id="pemail"></span></div>
+            <div class="field"><label>Phone</label><span id="pphone"></span></div>
+            <div class="field"><label>Location</label><span id="plocation"></span></div>
+            <div class="field"><label>LinkedIn</label><span id="plinkedin"></span></div>
+            <div class="field"><label>GitHub</label><span id="pgithub"></span></div>
+        </div>
+    </div>
+    <script>
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.href = 'login.html';
+        }
+        async function loadProfile() {
+            const token = localStorage.getItem('token');
+            if (!token) { window.location.href='login.html'; return; }
+            const res = await fetch('http://localhost:5000/api/profile', { headers: { 'Authorization':'Bearer '+token }});
+            if (!res.ok) { logout(); return; }
+            const u = await res.json();
+            document.getElementById('pname').textContent = u.name || '';
+            document.getElementById('pemail').textContent = u.email || '';
+            document.getElementById('pphone').textContent = u.phone || '';
+            document.getElementById('plocation').textContent = (u.city && u.state) ? `${u.city}, ${u.state}` : '';
+            document.getElementById('plinkedin').textContent = u.linkedIn || '';
+            document.getElementById('pgithub').textContent = u.github || '';
+        }
+        loadProfile();
+    </script>
+</body>
+</html>

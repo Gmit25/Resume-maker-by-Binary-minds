@@ -47,7 +47,7 @@
     <script>
         // already logged in?
         if (localStorage.getItem('token')) {
-            window.location.href = 'resume.html';
+            window.location.href = 'user_home.html';
         }
 
         async function handleLogin() {
@@ -57,7 +57,7 @@
                 alert('Please fill in both fields.');
                 return;
             }
-            const res = await fetch('http://localhost:5000/api/auth/login', {
+            const res = await fetch('http://localhost:5000/api/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password })
@@ -70,7 +70,7 @@
             const { token } = await res.json();
             localStorage.setItem('token', token);
             localStorage.setItem('signedUp', 'true');
-            window.location.href = 'resume.html';
+            window.location.href = 'user_home.html';
         }
     </script>
 </body>
