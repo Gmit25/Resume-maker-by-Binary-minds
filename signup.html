@@ -13,10 +13,6 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f5f5f5;
-            background-image: url('image1');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -24,10 +20,10 @@
             padding: 20px;
         }
         .signup-container {
-            background: rgba(255, 255, 255, 0.95);
+            background: white;
             padding: 40px;
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             width: 100%;
             max-width: 400px;
         }
@@ -85,28 +81,6 @@
             <input type="email" id="signupEmail" placeholder="john@example.com">
         </div>
         <div class="form-group">
-            <label for="signupPhone">Phone Number</label>
-            <input type="tel" id="signupPhone" placeholder="+1 (555) 123-4567">
-        </div>
-        <div class="form-group">
-            <label for="signupLinkedIn">LinkedIn Profile URL</label>
-            <input type="url" id="signupLinkedIn" placeholder="https://www.linkedin.com/in/username">
-        </div>
-        <div class="form-group">
-            <label for="signupGithub">GitHub Profile URL</label>
-            <input type="url" id="signupGithub" placeholder="https://github.com/username">
-        </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-            <div class="form-group" style="margin-bottom:0;">
-                <label for="signupCity">City</label>
-                <input type="text" id="signupCity" placeholder="San Francisco">
-            </div>
-            <div class="form-group" style="margin-bottom:0;">
-                <label for="signupState">State</label>
-                <input type="text" id="signupState" placeholder="CA">
-            </div>
-        </div>
-        <div class="form-group" style="margin-top:12px;">
             <label for="signupPassword">Password</label>
             <input type="password" id="signupPassword" placeholder="••••••••">
         </div>
@@ -117,23 +91,16 @@
         function handleSignUp() {
             const name = document.getElementById('signupName').value.trim();
             const email = document.getElementById('signupEmail').value.trim();
-            const phone = document.getElementById('signupPhone').value.trim();
-            const linkedIn = document.getElementById('signupLinkedIn').value.trim();
-            const github = document.getElementById('signupGithub').value.trim();
-            const city = document.getElementById('signupCity').value.trim();
-            const state = document.getElementById('signupState').value.trim();
             const password = document.getElementById('signupPassword').value; // not secure, demo only
-
-            if (!name || !email || !phone || !linkedIn || !github || !city || !state || !password) {
+            if (!name || !email || !password) {
                 alert('Please fill in all fields.');
                 return;
             }
-
-            const user = { name, email, phone, linkedIn, github, city, state };
+            // store simple user profile in localStorage
+            const user = { name, email };
             localStorage.setItem('userProfile', JSON.stringify(user));
             localStorage.setItem('signedUp', 'true');
-
-            // redirect to next step
+            // redirect to experience question page before resume maker
             window.location.href = 'experience.html';
         }
     </script>
