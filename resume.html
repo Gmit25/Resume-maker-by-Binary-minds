@@ -342,6 +342,11 @@
                 <input type="text" id="location" placeholder="New York, NY">
             </div>
             <div class="form-group">
+                <label>Are you a fresher or experienced professional?</label>
+                <label><input type="radio" name="experienceLevel" id="expFresher" value="Fresher"> Fresher</label>
+                <label><input type="radio" name="experienceLevel" id="expExperienced" value="Experienced professional"> Experienced</label>
+            </div>
+            <div class="form-group">
                 <label for="summary">Professional Summary</label>
                 <textarea id="summary" placeholder="Write a brief overview of your professional background and goals..."></textarea>
             </div>
@@ -379,6 +384,8 @@
                     <span id="previewPhone">(555) 123-4567</span>
                     <span>•</span>
                     <span id="previewLocation">City, State</span>
+                        <span>•</span>
+                        <span id="previewExperienceLevel"></span>
                 </div>
             </div>
 
@@ -514,12 +521,15 @@
             const email = document.getElementById('email').value || 'email@example.com';
             const phone = document.getElementById('phone').value || '(555) 123-4567';
             const location = document.getElementById('location').value || 'City, State';
+            // grab the radio selection for experience level
+            const experienceLevel = document.querySelector('input[name="experienceLevel"]:checked')?.value || '';
             const summary = document.getElementById('summary').value;
 
             document.getElementById('previewName').textContent = name;
             document.getElementById('previewEmail').textContent = email;
             document.getElementById('previewPhone').textContent = phone;
             document.getElementById('previewLocation').textContent = location;
+            document.getElementById('previewExperienceLevel').textContent = experienceLevel ? experienceLevel : '';
 
             // Summary Section
             const summarySection = document.getElementById('summarySection');
@@ -657,6 +667,7 @@
                     email: document.getElementById('email').value,
                     phone: document.getElementById('phone').value,
                     location: document.getElementById('location').value,
+                    experienceLevel: document.querySelector('input[name="experienceLevel"]:checked')?.value || '',
                     summary: document.getElementById('summary').value
                 },
                 skills: document.getElementById('skills').value,
@@ -717,6 +728,12 @@
                 document.getElementById('phone').value = data.personalInfo.phone || '';
                 document.getElementById('location').value = data.personalInfo.location || '';
                 document.getElementById('summary').value = data.personalInfo.summary || '';
+                // restore experience level radio
+                if (data.personalInfo.experienceLevel === 'Fresher') {
+                    document.getElementById('expFresher').checked = true;
+                } else if (data.personalInfo.experienceLevel === 'Experienced professional') {
+                    document.getElementById('expExperienced').checked = true;
+                }
             }
 
             // Load skills
