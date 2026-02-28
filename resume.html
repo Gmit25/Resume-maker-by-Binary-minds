@@ -399,6 +399,7 @@
 
     <!-- Control Buttons -->
     <div class="controls">
+        <button class="btn btn-primary" onclick="saveResume()">Save Resume</button>
         <button class="btn btn-success" onclick="downloadResume()">Download Resume</button>
         <button class="btn btn-secondary" onclick="clearAllData()">Clear Data</button>
     </div>
@@ -907,6 +908,29 @@
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
+        }
+
+        // Function to send resume data to backend API
+        async function saveResume() {
+            const resumeData = {
+                name: document.getElementById("name").value,
+                email: document.getElementById("email").value,
+                phone: document.getElementById("phone").value,
+                education: document.getElementById("education").value,
+                experience: document.getElementById("experience").value,
+                skills: document.getElementById("skills").value.split(",")
+            };
+
+            const response = await fetch("http://localhost:5000/api/resume", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(resumeData)
+            });
+
+            const result = await response.json();
+            alert(result.message);
         }
 
         // Clear all data
