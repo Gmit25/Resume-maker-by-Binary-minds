@@ -111,10 +111,18 @@
             <input type="password" id="signupPassword" placeholder="••••••••">
         </div>
         <button class="btn btn-primary" onclick="handleSignUp()">Sign Up</button>
+        <div class="link" style="text-align:center; margin-top:10px; font-size:.9em;">
+            <a href="login.html">Already have an account? Log in</a>
+        </div>
     </div>
 
     <script>
-        function handleSignUp() {
+        // if user already has token, go straight to resume page
+        if (localStorage.getItem('token')) {
+            window.location.href = 'resume.html';
+        }
+
+        async function handleSignUp() {
             const name = document.getElementById('signupName').value.trim();
             const phone = document.getElementById('signupPhone').value.trim();
             const email = document.getElementById('signupEmail').value.trim();
@@ -129,12 +137,20 @@
                 return;
             }
 
-            const user = { name, phone, email, linkedIn, github, city, state };
-            localStorage.setItem('userProfile', JSON.stringify(user));
+            const res = await fetch('http://localhost:5000/api/auth/signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, phone, email, linkedIn, github, city, state, password })
+            });
+            if (!res.ok) {
+                const err = await res.json();
+                alert(err.message || 'Signup failed');
+                return;
+            }
+            const { token } = await res.json();
+            localStorage.setItem('token', token);
             localStorage.setItem('signedUp', 'true');
-            window.location.href = 'experience.html';
-        }
-    </script>
+            window.location.href = 'resume.html';
         }
     </script>
 </body>

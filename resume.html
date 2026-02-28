@@ -397,11 +397,18 @@
         </div>
     </div>
 
+    <!-- Saved resumes list -->
+    <div id="resumeList" class="form-section" style="margin-top:20px;">
+        <h2>Saved Resumes</h2>
+        <div id="savedItems" class="empty-message">None saved yet.</div>
+    </div>
+
     <!-- Control Buttons -->
     <div class="controls">
         <button class="btn btn-primary" onclick="saveResume()">Save Resume</button>
         <button class="btn btn-success" onclick="downloadResume()">Download Resume</button>
         <button class="btn btn-secondary" onclick="clearAllData()">Clear Data</button>
+        <button class="btn btn-danger" onclick="logout()">Logout</button>
     </div>
 
     <script>
@@ -447,12 +454,20 @@
         let projectCount = 0;
 
         // Initialize on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            // if not signed up yet, send to signup page
-            if (!localStorage.getItem('signedUp')) {
-                window.location.href = 'signup.html';
-                return;
+        document.addEventListener('DOMContentLoaded', async () => {
+            // require token to interact with backend
+            const token = localStorage.getItem('token');
+            if (!token) {
+                // fall back to local-only version / redirect
+                if (!localStorage.getItem('signedUp')) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+            } else {
+                await loadProfile();
+                await fetchResumes();
             }
+
             loadFromLocalStorage();
             setupEventListeners();
             updatePreview();
@@ -652,6 +667,28 @@
             }
         }
 
+        // load profile from backend and prefill personal info
+        async function loadProfile() {
+            const token = localStorage.getItem('token');
+            if (!token) return;
+            const res = await fetch('http://localhost:5000/api/profile', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            if (res.ok) {
+                const u = await res.json();
+                document.getElementById('fullName').value = u.name || '';
+                document.getElementById('phone').value = u.phone || '';
+                document.getElementById('email').value = u.email || '';
+                document.getElementById('location').value = (u.city && u.state) ? `${u.city}, ${u.state}` : '';
+                // linkedin and github not yet used in preview but could be stored
+                updatePreview();
+            } else {
+                // token problem, redirect to login
+                localStorage.removeItem('token');
+                window.location.href = 'login.html';
+            }
+        }
+
         // Helper function to format month input to readable format
         function formatMonth(monthString) {
             if (!monthString) return '';
@@ -780,6 +817,47 @@
                     projectCount++;
                 });
             }
+        }
+
+        // Helper that extracts the current resume data from the form
+        function extractResumeData() {
+            const data = {
+                education: [],
+                experience: [],
+                skills: []
+            };
+
+            // collect experience
+            document.querySelectorAll('.exp-title').forEach((entry) => {
+                const idx = entry.dataset.index;
+                data.experience.push({
+                    title: entry.value,
+                    company: document.querySelector(`.exp-company[data-index="${idx}"]`).value,
+                    start: document.querySelector(`.exp-start[data-index="${idx}"]`).value,
+                    end: document.querySelector(`.exp-end[data-index="${idx}"]`).value,
+                    description: document.querySelector(`.exp-description[data-index="${idx}"]`).value
+                });
+            });
+
+            // collect education
+            document.querySelectorAll('.edu-school').forEach((entry) => {
+                const idx = entry.dataset.index;
+                data.education.push({
+                    school: entry.value,
+                    degree: document.querySelector(`.edu-degree[data-index="${idx}"]`).value,
+                    start: document.querySelector(`.edu-start[data-index="${idx}"]`).value,
+                    end: document.querySelector(`.edu-end[data-index="${idx}"]`).value,
+                    details: document.querySelector(`.edu-details[data-index="${idx}"]`).value
+                });
+            });
+
+            // skills
+            const skillsText = document.getElementById('skills').value;
+            if (skillsText.trim()) {
+                data.skills = skillsText.split(',').map(s => s.trim()).filter(s => s);
+            }
+
+            return data;
         }
 
         // Download resume as HTML file
@@ -931,6 +1009,110 @@
 
             const result = await response.json();
             alert(result.message);
+        }
+
+        // Save current resume to backend
+        async function saveResume() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('You must be logged in to save resumes.');
+                return;
+            }
+
+            const title = prompt('Enter a title for this resume:', 'My Resume');
+            if (!title) return;
+
+            const payload = extractResumeData();
+            const res = await fetch('http://localhost:5000/api/resumes', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                },
+                body: JSON.stringify({ title, ...payload })
+            });
+            if (res.ok) {
+                alert('Resume saved');
+                fetchResumes();
+            } else {
+                const err = await res.json();
+                alert(err.message || 'Save failed');
+            }
+        }
+
+        // Fetch list of saved resumes and render
+        async function fetchResumes() {
+            const token = localStorage.getItem('token');
+            if (!token) return;
+            const res = await fetch('http://localhost:5000/api/resumes', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            if (!res.ok) return;
+            const list = await res.json();
+            const container = document.getElementById('savedItems');
+            if (list.length === 0) {
+                container.innerHTML = '<div class="empty-message">None saved yet.</div>';
+                return;
+            }
+            container.innerHTML = list.map(r => `
+                <div style="padding:6px 0; border-bottom:1px solid #eee; cursor:pointer;" onclick="loadResume('${r._id}')">
+                    ${r.title} <span style="color:#999;font-size:.85em">(${new Date(r.createdAt).toLocaleDateString()})</span>
+                </div>
+            `).join('');
+        }
+
+        // Load a resume from backend and populate form
+        async function loadResume(id) {
+            const token = localStorage.getItem('token');
+            if (!token) return;
+            const res = await fetch(`http://localhost:5000/api/resumes/${id}`, {
+                headers: { 'Authorization': 'Bearer ' + token }
+            });
+            if (!res.ok) return;
+            const r = await res.json();
+            // clear existing entries
+            document.getElementById('experienceContainer').innerHTML = '';
+            document.getElementById('educationContainer').innerHTML = '';
+            document.getElementById('projectsContainer').innerHTML = '';
+            experienceCount = 0;
+            educationCount = 0;
+            projectCount = 0;
+
+            if (r.experience) {
+                r.experience.forEach(exp => {
+                    addExperience();
+                    const idx = experienceCount - 1;
+                    document.querySelector(`.exp-title[data-index="${idx}"]`).value = exp.title;
+                    document.querySelector(`.exp-company[data-index="${idx}"]`).value = exp.company;
+                    document.querySelector(`.exp-start[data-index="${idx}"]`).value = exp.start;
+                    document.querySelector(`.exp-end[data-index="${idx}"]`).value = exp.end;
+                    document.querySelector(`.exp-description[data-index="${idx}"]`).value = exp.description;
+                });
+            }
+
+            if (r.education) {
+                r.education.forEach(edu => {
+                    addEducation();
+                    const idx = educationCount - 1;
+                    document.querySelector(`.edu-school[data-index="${idx}"]`).value = edu.school;
+                    document.querySelector(`.edu-degree[data-index="${idx}"]`).value = edu.degree;
+                    document.querySelector(`.edu-start[data-index="${idx}"]`).value = edu.start;
+                    document.querySelector(`.edu-end[data-index="${idx}"]`).value = edu.end;
+                    document.querySelector(`.edu-details[data-index="${idx}"]`).value = edu.details;
+                });
+            }
+
+            if (r.skills && r.skills.length) {
+                document.getElementById('skills').value = r.skills.join(', ');
+            }
+
+            updatePreview();
+        }
+
+        // Logout user
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.href = 'login.html';
         }
 
         // Clear all data
