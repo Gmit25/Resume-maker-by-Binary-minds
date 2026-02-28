@@ -440,6 +440,11 @@
 
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', () => {
+            // if not signed up yet, send to signup page
+            if (!localStorage.getItem('signedUp')) {
+                window.location.href = 'signup.html';
+                return;
+            }
             loadFromLocalStorage();
             setupEventListeners();
             updatePreview();
