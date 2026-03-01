@@ -405,10 +405,11 @@
 
     <!-- Control Buttons -->
     <div class="controls">
-        <button class="btn btn-primary" onclick="saveResume()">Save Resume</button>
-        <button class="btn btn-success" onclick="downloadResume()">Download Resume</button>
-        <button class="btn btn-secondary" onclick="clearAllData()">Clear Data</button>
-        <button class="btn btn-danger" onclick="logout()">Logout</button>
+        <button class="btn btn-primary" onclick="goToReview()">📋 Review Resume</button>
+        <button class="btn btn-success" onclick="downloadResume()">⬇️ Download Resume</button>
+        <button class="btn btn-primary" onclick="saveResume()">💾 Save Resume</button>
+        <button class="btn btn-secondary" onclick="clearAllData()">🗑️ Clear Data</button>
+        <button class="btn btn-danger" onclick="logout()">🚪 Logout</button>
     </div>
 
     <script>
@@ -828,9 +829,16 @@
         // Helper that extracts the current resume data from the form
         function extractResumeData() {
             const data = {
+                fullName: document.getElementById('fullName').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                location: document.getElementById('location').value,
+                experienceLevel: document.querySelector('input[name="experienceLevel"]:checked')?.value || '',
+                summary: document.getElementById('summary').value,
                 education: [],
                 experience: [],
-                skills: []
+                skills: [],
+                projects: []
             };
 
             // collect experience
@@ -839,8 +847,8 @@
                 data.experience.push({
                     title: entry.value,
                     company: document.querySelector(`.exp-company[data-index="${idx}"]`).value,
-                    start: document.querySelector(`.exp-start[data-index="${idx}"]`).value,
-                    end: document.querySelector(`.exp-end[data-index="${idx}"]`).value,
+                    startDate: document.querySelector(`.exp-start[data-index="${idx}"]`).value,
+                    endDate: document.querySelector(`.exp-end[data-index="${idx}"]`).value,
                     description: document.querySelector(`.exp-description[data-index="${idx}"]`).value
                 });
             });
@@ -851,9 +859,17 @@
                 data.education.push({
                     school: entry.value,
                     degree: document.querySelector(`.edu-degree[data-index="${idx}"]`).value,
-                    start: document.querySelector(`.edu-start[data-index="${idx}"]`).value,
-                    end: document.querySelector(`.edu-end[data-index="${idx}"]`).value,
+                    graduationDate: document.querySelector(`.edu-start[data-index="${idx}"]`).value,
                     details: document.querySelector(`.edu-details[data-index="${idx}"]`).value
+                });
+            });
+
+            // collect projects
+            document.querySelectorAll('.proj-name').forEach((entry) => {
+                const idx = entry.dataset.index;
+                data.projects.push({
+                    name: entry.value,
+                    description: document.querySelector(`.proj-description[data-index="${idx}"]`).value
                 });
             });
 
@@ -1092,6 +1108,20 @@
             }
 
             updatePreview();
+        }
+
+        // Navigate to review page with resume data
+        function goToReview() {
+            const resumeData = extractResumeData();
+            
+            // Store resume data in sessionStorage to pass to review page
+            sessionStorage.setItem('resumeForReview', JSON.stringify(resumeData));
+            
+            // Also save to localStorage for persistence
+            saveToLocalStorage();
+            
+            // Redirect to review page
+            window.location.href = 'review.html';
         }
 
         // Logout user

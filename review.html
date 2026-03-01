@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Review & Skill Recommendations</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        /* Two-column layout */
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        /* Resume Section */
+        .resume-preview {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .resume-preview h2 {
+            color: #667eea;
+            font-size: 1.8em;
+            margin-bottom: 5px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .resume-preview .contact {
+            color: #666;
+            font-size: 0.95em;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .resume-section {
+            margin-top: 20px;
+        }
+
+        .resume-section h3 {
+            color: #333;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .resume-entry {
+            margin-bottom: 15px;
+        }
+
+        .entry-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 5px;
+        }
+
+        .entry-title {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .entry-subtitle {
+            color: #667eea;
+            font-weight: 500;
+            font-size: 0.95em;
+        }
+
+        .entry-date {
+            color: #999;
+            font-size: 0.9em;
+        }
+
+        .entry-description {
+            color: #666;
+            font-size: 0.95em;
+            margin-top: 5px;
+            line-height: 1.4;
+        }
+
+        .skills-display {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .skill-badge {
+            background-color: #e8eaf6;
+            color: #667eea;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        /* Recommendations Section */
+        .recommendations {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .recommendations h2 {
+            color: #667eea;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .rec-subtitle {
+            color: #666;
+            font-size: 0.95em;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .recommendation-item {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .recommendation-item:hover {
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .rec-skill-name {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .rec-relevance {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .rec-description {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .related-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .related-skill-tag {
+            background: #e8eaf6;
+            color: #667eea;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.85em;
+        }
+
+        .no-recommendations {
+            color: #999;
+            text-align: center;
+            padding: 40px 20px;
+            font-style: italic;
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background-color: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #5568d3;
+        }
+
+        .btn-success {
+            background-color: #27ae60;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #229954;
+        }
+
+        .btn-secondary {
+            background-color: #95a5a6;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+        }
+
+        .btn-danger {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+
+        .empty-section {
+            color: #999;
+            font-style: italic;
+            text-align: center;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 4px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+
+            .resume-preview,
+            .recommendations {
+                max-height: none;
+            }
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+
+            .header, .controls, .recommendations {
+                display: none;
+            }
+
+            .container {
+                max-width: 100%;
+            }
+
+            .content {
+                grid-template-columns: 1fr;
+            }
+
+            .resume-preview {
+                box-shadow: none;
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>📋 Resume Review</h1>
+            <p>Your resume is ready! Check out recommended skills to enhance your profile.</p>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <!-- Resume Preview -->
+            <div class="resume-preview" id="resumePreview">
+                <div id="resumeContent">
+                    <!-- Resume will be populated here -->
+                </div>
+            </div>
+
+            <!-- Skill Recommendations -->
+            <div class="recommendations" id="recommendationsSection">
+                <h2>📚 Recommended Skills</h2>
+                <p class="rec-subtitle">Based on your current skills, here are skills you should consider learning:</p>
+                <div id="recommendationsList">
+                    <!-- Recommendations will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <button class="btn btn-primary" onclick="editResume()">← Back to Edit</button>
+            <button class="btn btn-success" onclick="downloadResume()">⬇️ Download Resume</button>
+            <button class="btn btn-secondary" onclick="saveResume()">💾 Save to Profile</button>
+            <button class="btn btn-danger" onclick="logout()">🚪 Logout</button>
+        </div>
+    </div>
+
+    <script src="skills-correlation.js"></script>
+    <script>
+        // Store resume data globally
+        let resumeData = null;
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadResumeFromStorage();
+            displayResume();
+            displayRecommendations();
+        });
+
+        // Load resume data from session/localStorage
+        function loadResumeFromStorage() {
+            // Try to get from sessionStorage first (passed from resume.html)
+            let data = sessionStorage.getItem('resumeForReview');
+            
+            if (!data) {
+                // Fall back to localStorage
+                data = localStorage.getItem('resumeData');
+            }
+
+            if (data) {
+                try {
+                    resumeData = JSON.parse(data);
+                } catch (e) {
+                    console.error('Error parsing resume data:', e);
+                    resumeData = {};
+                }
+            } else {
+                resumeData = {};
+            }
+        }
+
+        // Display resume preview
+        function displayResume() {
+            const resumeContent = document.getElementById('resumeContent');
+            
+            if (!resumeData || Object.keys(resumeData).length === 0) {
+                resumeContent.innerHTML = '<div class="empty-section">No resume data found. Please create a resume first.</div>';
+                return;
+            }
+
+            let html = '';
+
+            // Personal Info
+            const name = resumeData.fullName || 'Your Name';
+            const email = resumeData.email || '';
+            const phone = resumeData.phone || '';
+            const location = resumeData.location || '';
+            const experienceLevel = resumeData.experienceLevel || '';
+
+            html += `<h2>${name}</h2>`;
+            html += `<div class="contact">`;
+            if (email) html += `<div>📧 ${email}</div>`;
+            if (phone) html += `<div>📱 ${phone}</div>`;
+            if (location) html += `<div>📍 ${location}</div>`;
+            if (experienceLevel) html += `<div>💼 ${experienceLevel}</div>`;
+            html += `</div>`;
+
+            // Summary
+            if (resumeData.summary) {
+                html += `<div class="resume-section">
+                    <h3>Summary</h3>
+                    <p class="entry-description">${escapeHtml(resumeData.summary)}</p>
+                </div>`;
+            }
+
+            // Experience
+            if (resumeData.experience && resumeData.experience.length > 0) {
+                html += `<div class="resume-section">
+                    <h3>Experience</h3>`;
+                resumeData.experience.forEach((exp) => {
+                    html += `<div class="resume-entry">
+                        <div class="entry-header">
+                            <span class="entry-title">${escapeHtml(exp.title || '')}</span>
+                            <span class="entry-date">${escapeHtml(exp.startDate || '')} - ${escapeHtml(exp.endDate || '')}</span>
+                        </div>
+                        <div class="entry-subtitle">${escapeHtml(exp.company || '')}</div>
+                        <div class="entry-description">${escapeHtml(exp.description || '')}</div>
+                    </div>`;
+                });
+                html += `</div>`;
+            }
+
+            // Education
+            if (resumeData.education && resumeData.education.length > 0) {
+                html += `<div class="resume-section">
+                    <h3>Education</h3>`;
+                resumeData.education.forEach((edu) => {
+                    html += `<div class="resume-entry">
+                        <div class="entry-header">
+                            <span class="entry-title">${escapeHtml(edu.school || '')}</span>
+                            <span class="entry-date">${escapeHtml(edu.graduationDate || '')}</span>
+                        </div>
+                        <div class="entry-subtitle">${escapeHtml(edu.degree || '')}</div>
+                    </div>`;
+                });
+                html += `</div>`;
+            }
+
+            // Skills
+            if (resumeData.skills) {
+                const skillsArray = typeof resumeData.skills === 'string' 
+                    ? resumeData.skills.split(',').map(s => s.trim()).filter(s => s)
+                    : resumeData.skills;
+                
+                if (skillsArray.length > 0) {
+                    html += `<div class="resume-section">
+                        <h3>Skills</h3>
+                        <div class="skills-display">`;
+                    skillsArray.forEach((skill) => {
+                        html += `<span class="skill-badge">${escapeHtml(skill)}</span>`;
+                    });
+                    html += `</div></div>`;
+                }
+            }
+
+            // Projects
+            if (resumeData.projects && resumeData.projects.length > 0) {
+                html += `<div class="resume-section">
+                    <h3>Projects</h3>`;
+                resumeData.projects.forEach((proj) => {
+                    html += `<div class="resume-entry">
+                        <div class="entry-title">${escapeHtml(proj.name || '')}</div>
+                        <div class="entry-description">${escapeHtml(proj.description || '')}</div>
+                    </div>`;
+                });
+                html += `</div>`;
+            }
+
+            resumeContent.innerHTML = html;
+        }
+
+        // Display skill recommendations
+        function displayRecommendations() {
+            const recommendationsList = document.getElementById('recommendationsList');
+            
+            // Parse skills from resume
+            let currentSkills = [];
+            if (resumeData.skills) {
+                if (typeof resumeData.skills === 'string') {
+                    currentSkills = resumeData.skills.split(',').map(s => s.trim()).filter(s => s);
+                } else if (Array.isArray(resumeData.skills)) {
+                    currentSkills = resumeData.skills;
+                }
+            }
+
+            if (currentSkills.length === 0) {
+                recommendationsList.innerHTML = '<div class="empty-section">Add skills to your resume to get personalized recommendations!</div>';
+                return;
+            }
+
+            // Get recommendations
+            const recommendations = getUniqueRecommendations(currentSkills);
+
+            if (recommendations.length === 0) {
+                recommendationsList.innerHTML = '<div class="empty-section">No recommendations available for your current skills. You\'re doing great!</div>';
+                return;
+            }
+
+            // Display top 8 recommendations
+            let html = '';
+            recommendations.slice(0, 8).forEach((rec) => {
+                const relevanceText = rec.relevance === 1 
+                    ? '1 match' 
+                    : `${rec.relevance} matches`;
+                
+                html += `<div class="recommendation-item">
+                    <div class="rec-skill-name">${escapeHtml(rec.skill)}</div>
+                    <span class="rec-relevance">🎯 ${relevanceText}</span>
+                    <div class="rec-description">
+                        Complements your knowledge in: <strong>${rec.relatedTo.slice(0, 3).join(', ')}</strong>
+                        ${rec.relatedTo.length > 3 ? ` and more...` : ''}
+                    </div>
+                    <div class="related-skills">`;
+                
+                rec.relatedTo.slice(0, 5).forEach((skill) => {
+                    html += `<span class="related-skill-tag">✓ ${escapeHtml(skill)}</span>`;
+                });
+                
+                html += `</div></div>`;
+            });
+
+            recommendationsList.innerHTML = html;
+        }
+
+        // Utility function to escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Edit resume - go back to resume page
+        function editResume() {
+            sessionStorage.setItem('resumeForReview', JSON.stringify(resumeData));
+            window.location.href = 'resume.html';
+        }
+
+        // Download resume as HTML
+        function downloadResume() {
+            const name = resumeData.fullName || 'resume';
+            const filename = `${name.replace(/\s+/g, '_')}_Resume.html`;
+
+            const htmlContent = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${name} - Resume</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 40px 20px; background: white; }
+        .resume-header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #333; padding-bottom: 20px; }
+        .resume-name { font-size: 2em; font-weight: bold; color: #333; margin-bottom: 10px; }
+        .resume-contact { font-size: 0.9em; color: #666; }
+        .resume-section-title { font-size: 1.2em; font-weight: bold; color: #333; margin-top: 25px; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 8px; }
+        .resume-entry { margin-bottom: 20px; }
+        .entry-header { display: flex; justify-content: space-between; margin-bottom: 5px; }
+        .entry-title { font-weight: bold; color: #333; }
+        .entry-date { color: #999; font-size: 0.9em; }
+        .entry-subtitle { color: #667eea; font-weight: 600; }
+        .entry-description { color: #555; font-size: 0.95em; line-height: 1.5; margin-top: 5px; }
+        .skills-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+        .skill-tag { background-color: #e8eaf6; color: #667eea; padding: 5px 12px; border-radius: 20px; font-size: 0.9em; }
+        @media print { body { padding: 0; } }
+    </style>
+</head>
+<body>
+    <div class="resume-header">
+        <div class="resume-name">${escapeHtml(name)}</div>
+        <div class="resume-contact">
+            ${resumeData.email ? `${escapeHtml(resumeData.email)} | ` : ''}
+            ${resumeData.phone ? `${escapeHtml(resumeData.phone)} | ` : ''}
+            ${resumeData.location ? escapeHtml(resumeData.location) : ''}
+        </div>
+    </div>
+
+    ${resumeData.summary ? `<div><div class="resume-section-title">Summary</div><p>${escapeHtml(resumeData.summary)}</p></div>` : ''}
+
+    ${resumeData.experience && resumeData.experience.length > 0 ? `<div><div class="resume-section-title">Experience</div>${resumeData.experience.map(exp => `
+        <div class="resume-entry">
+            <div class="entry-header"><span class="entry-title">${escapeHtml(exp.title || '')}</span><span class="entry-date">${escapeHtml(exp.startDate || '')} - ${escapeHtml(exp.endDate || '')}</span></div>
+            <div class="entry-subtitle">${escapeHtml(exp.company || '')}</div>
+            <div class="entry-description">${escapeHtml(exp.description || '')}</div>
+        </div>
+    `).join('')}</div>` : ''}
+
+    ${resumeData.education && resumeData.education.length > 0 ? `<div><div class="resume-section-title">Education</div>${resumeData.education.map(edu => `
+        <div class="resume-entry">
+            <div class="entry-header"><span class="entry-title">${escapeHtml(edu.school || '')}</span><span class="entry-date">${escapeHtml(edu.graduationDate || '')}</span></div>
+            <div class="entry-subtitle">${escapeHtml(edu.degree || '')}</div>
+        </div>
+    `).join('')}</div>` : ''}
+
+    ${resumeData.skills ? `<div><div class="resume-section-title">Skills</div><div class="skills-list">${(typeof resumeData.skills === 'string' ? resumeData.skills.split(',') : resumeData.skills).map(s => `<span class="skill-tag">${escapeHtml(s.trim())}</span>`).join('')}</div></div>` : ''}
+</body>
+</html>`;
+
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Save resume to backend
+        async function saveResume() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('Please login to save your resume');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const title = prompt('Enter a title for this resume:', resumeData.fullName || 'My Resume');
+            if (!title) return;
+
+            const payload = {
+                title,
+                fullName: resumeData.fullName,
+                email: resumeData.email,
+                phone: resumeData.phone,
+                location: resumeData.location,
+                summary: resumeData.summary,
+                experience: resumeData.experience || [],
+                education: resumeData.education || [],
+                skills: resumeData.skills,
+                projects: resumeData.projects || [],
+            };
+
+            try {
+                const res = await fetch('/api/resumes', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token,
+                    },
+                    body: JSON.stringify(payload),
+                });
+
+                if (res.ok) {
+                    alert('Resume saved successfully!');
+                } else {
+                    alert('Error saving resume. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error saving resume:', error);
+                alert('Error saving resume');
+            }
+        }
+
+        // Logout user
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>
