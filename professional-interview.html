@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Interview - Resume Maker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1em;
+            opacity: 0.9;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e0e0e0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #27ae60;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .content {
+            padding: 40px;
+            min-height: 400px;
+        }
+
+        .question-section {
+            display: none;
+        }
+
+        .question-section.active {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .question-number {
+            color: #27ae60;
+            font-weight: 600;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        .question-title {
+            font-size: 1.4em;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus,
+        input[type="number"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #27ae60;
+            box-shadow: 0 0 5px rgba(39, 174, 96, 0.3);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .radio-group,
+        .checkbox-group {
+            margin-top: 15px;
+        }
+
+        .radio-option,
+        .checkbox-option {
+            margin-bottom: 12px;
+        }
+
+        .radio-option label,
+        .checkbox-option label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            margin-bottom: 0;
+        }
+
+        .radio-option input[type="radio"],
+        .checkbox-option input[type="checkbox"] {
+            margin-right: 10px;
+            cursor: pointer;
+            width: auto;
+            padding: 0;
+            border: none;
+        }
+
+        .skills-input {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .skill-tag {
+            background: #d4edda;
+            color: #27ae60;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .skill-tag button {
+            background: none;
+            border: none;
+            color: #27ae60;
+            cursor: pointer;
+            font-weight: bold;
+            padding: 0;
+        }
+
+        .skill-input-wrapper {
+            display: flex;
+            gap: 8px;
+        }
+
+        .skill-input-wrapper input {
+            flex: 1;
+        }
+
+        .skill-input-wrapper button {
+            padding: 10px 15px;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: space-between;
+            margin-top: 40px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+            flex: 1;
+        }
+
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+
+        .btn-primary {
+            background: #27ae60;
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            background: #229954;
+        }
+
+        .summary-section {
+            background: #f9f9f9;
+            padding: 30px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .summary-title {
+            font-size: 1.2em;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .summary-item {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .summary-label {
+            color: #27ae60;
+            font-weight: 600;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .summary-value {
+            color: #333;
+            font-size: 1em;
+        }
+
+        @media (max-width: 600px) {
+            .content {
+                padding: 25px;
+            }
+
+            .header h1 {
+                font-size: 1.5em;
+            }
+
+            .question-title {
+                font-size: 1.2em;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💼 Professional Interview</h1>
+            <p>Build your advanced resume with your experience</p>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <div class="content">
+            <!-- Q1: Field -->
+            <div class="question-section active" id="q1">
+                <div class="question-number">Question 1 of 8</div>
+                <div class="question-title">What field are you working in?</div>
+                <div class="form-group">
+                    <label for="field">Select your primary field:</label>
+                    <select id="field">
+                        <option value="">-- Select --</option>
+                        <option value="Software Development">Software Development</option>
+                        <option value="Data Science">Data Science</option>
+                        <option value="Web Development">Web Development</option>
+                        <option value="Mobile Development">Mobile Development</option>
+                        <option value="Cloud Engineering">Cloud Engineering</option>
+                        <option value="DevOps">DevOps</option>
+                        <option value="UI/UX Design">UI/UX Design</option>
+                        <option value="Product Management">Product Management</option>
+                        <option value="Business Analysis">Business Analysis</option>
+                        <option value="Machine Learning">Machine Learning</option>
+                        <option value="Cybersecurity">Cybersecurity</option>
+                        <option value="Solutions Architecture">Solutions Architecture</option>
+                        <option value="Technical Lead">Technical Lead</option>
+                        <option value="Engineering Manager">Engineering Manager</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Q2: Strengths -->
+            <div class="question-section" id="q2">
+                <div class="question-number">Question 2 of 8</div>
+                <div class="question-title">What are your top 3 professional strengths?</div>
+                <div class="form-group">
+                    <label for="strengths">Describe your strengths (comma-separated):</label>
+                    <textarea id="strengths" placeholder="e.g., System Design, Team Leadership, Technical Architecture"></textarea>
+                </div>
+            </div>
+
+            <!-- Q3: Company Type -->
+            <div class="question-section" id="q3">
+                <div class="question-number">Question 3 of 8</div>
+                <div class="question-title">What type of company culture appeals to you?</div>
+                <div class="form-group">
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <label>
+                                <input type="radio" name="companyType" value="Startup">
+                                <span>🚀 Startup - Innovation-driven, dynamic, rapid growth</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <label>
+                                <input type="radio" name="companyType" value="MNC">
+                                <span>💼 MNC - Established, structured, global scale</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <label>
+                                <input type="radio" name="companyType" value="Research">
+                                <span>🔬 Research - Cutting-edge, innovation labs, R&D focus</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q4: Experience -->
+            <div class="question-section" id="q4">
+                <div class="question-number">Question 4 of 8</div>
+                <div class="question-title">Tell us about your professional experience</div>
+                <div class="form-group">
+                    <label for="yearsExp">Years of experience:</label>
+                    <input type="number" id="yearsExp" min="1" placeholder="e.g., 5">
+                </div>
+                <div class="form-group">
+                    <label for="currentCompany">Current/Last Company:</label>
+                    <input type="text" id="currentCompany" placeholder="e.g., Google, Microsoft">
+                </div>
+                <div class="form-group">
+                    <label for="currentRole">Current/Last Role:</label>
+                    <input type="text" id="currentRole" placeholder="e.g., Senior Software Engineer">
+                </div>
+                <div class="form-group">
+                    <label for="currentExp">Key responsibilities:</label>
+                    <textarea id="currentExp" placeholder="Describe your main responsibilities..."></textarea>
+                </div>
+            </div>
+
+            <!-- Q5: Previous Experience -->
+            <div class="question-section" id="q5">
+                <div class="question-number">Question 5 of 8</div>
+                <div class="question-title">Tell us about a previous role (if applicable)</div>
+                <div class="form-group">
+                    <label for="prevCompany">Previous Company (optional):</label>
+                    <input type="text" id="prevCompany" placeholder="e.g., Amazon, Apple">
+                </div>
+                <div class="form-group">
+                    <label for="prevRole">Previous Role:</label>
+                    <input type="text" id="prevRole" placeholder="e.g., Software Developer">
+                </div>
+                <div class="form-group">
+                    <label for="prevExp">What did you do there?</label>
+                    <textarea id="prevExp" placeholder="Describe your experience..."></textarea>
+                </div>
+            </div>
+
+            <!-- Q6: Real-world Projects -->
+            <div class="question-section" id="q6">
+                <div class="question-number">Question 6 of 8</div>
+                <div class="question-title">Describe your most impactful project</div>
+                <div class="form-group">
+                    <label for="projectName">Project/Product Name:</label>
+                    <input type="text" id="projectName" placeholder="e.g., Real-time Analytics Platform">
+                </div>
+                <div class="form-group">
+                    <label for="projectDesc">What was the project about?</label>
+                    <textarea id="projectDesc" placeholder="Describe the project, its impact, and scale..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="projectRole">Your role:</label>
+                    <input type="text" id="projectRole" placeholder="e.g., Lead Backend Engineer, Architect">
+                </div>
+                <div class="form-group">
+                    <label for="projectImpact">Business/Technical impact:</label>
+                    <textarea id="projectImpact" placeholder="e.g., Improved performance by 40%, Reduced costs by 50%..."></textarea>
+                </div>
+            </div>
+
+            <!-- Q7: Technology Stack -->
+            <div class="question-section" id="q7">
+                <div class="question-number">Question 7 of 8</div>
+                <div class="question-title">What's your technology stack?</div>
+                <div class="form-group">
+                    <label>Add your technical skills (press Enter or click Add):</label>
+                    <div class="skill-input-wrapper">
+                        <input type="text" id="skillInput" placeholder="e.g., Java, Python, React, Kubernetes, AWS">
+                        <button type="button" onclick="addSkill()">Add</button>
+                    </div>
+                    <div class="skills-input" id="skillsList"></div>
+                </div>
+            </div>
+
+            <!-- Q8: Key Achievements -->
+            <div class="question-section" id="q8">
+                <div class="question-number">Question 8 of 8</div>
+                <div class="question-title">What are your key career achievements?</div>
+                <div class="form-group">
+                    <label for="achievements">List your major achievements (comma-separated):</label>
+                    <textarea id="achievements" placeholder="e.g., Led team of 10 engineers, Reduced system latency by 50%, Architected microservices platform"></textarea>
+                </div>
+            </div>
+
+            <!-- Summary -->
+            <div class="question-section" id="summary">
+                <div class="summary-title">📋 Interview Summary</div>
+                <div class="summary-section">
+                    <div class="summary-item">
+                        <div class="summary-label">Field</div>
+                        <div class="summary-value" id="summaryField">-</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Experience</div>
+                        <div class="summary-value" id="summaryExp">-</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Current Role</div>
+                        <div class="summary-value" id="summaryRole">-</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Preferred Company</div>
+                        <div class="summary-value" id="summaryCompany">-</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Top Skills</div>
+                        <div class="summary-value" id="summarySkills">-</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="controls">
+                <button class="btn btn-secondary" id="prevBtn" onclick="previousQuestion()" style="display: none;">← Previous</button>
+                <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">Next →</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="skills-correlation.js"></script>
+    <script>
+        let currentQuestion = 1;
+        const totalQuestions = 9; // 8 questions + summary
+        let skills = [];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = 'login.html';
+            }
+            loadAnswers();
+            updateProgress();
+            addEnterKeyListener();
+        });
+
+        function updateProgress() {
+            const progress = (currentQuestion / totalQuestions) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            
+            document.getElementById('prevBtn').style.display = currentQuestion > 1 ? 'block' : 'none';
+            document.getElementById('nextBtn').innerHTML = currentQuestion === totalQuestions ? 'Complete ✓' : 'Next →';
+        }
+
+        function showQuestion(n) {
+            const sections = document.querySelectorAll('.question-section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            if (n > 0 && n <= sections.length) {
+                sections[n - 1].classList.add('active');
+                window.scrollTo(0, 0);
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestion === totalQuestions) {
+                submitInterview();
+                return;
+            }
+            
+            if (currentQuestion < totalQuestions) {
+                currentQuestion++;
+                showQuestion(currentQuestion);
+                updateProgress();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 1) {
+                currentQuestion--;
+                showQuestion(currentQuestion);
+                updateProgress();
+            }
+        }
+
+        function addSkill() {
+            const input = document.getElementById('skillInput');
+            const skill = input.value.trim();
+            
+            if (skill && !skills.includes(skill)) {
+                skills.push(skill);
+                updateSkillsList();
+                input.value = '';
+            }
+        }
+
+        function removeSkill(skill) {
+            skills = skills.filter(s => s !== skill);
+            updateSkillsList();
+        }
+
+        function updateSkillsList() {
+            const container = document.getElementById('skillsList');
+            container.innerHTML = skills.map(skill => 
+                `<div class="skill-tag">${skill} <button type="button" onclick="removeSkill('${skill}')">×</button></div>`
+            ).join('');
+        }
+
+        function addEnterKeyListener() {
+            document.getElementById('skillInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    addSkill();
+                }
+            });
+        }
+
+        function collectAnswers() {
+            return {
+                field: document.getElementById('field').value,
+                strengths: document.getElementById('strengths').value,
+                companyType: document.querySelector('input[name="companyType"]:checked')?.value || '',
+                yearsExp: document.getElementById('yearsExp').value,
+                currentCompany: document.getElementById('currentCompany').value,
+                currentRole: document.getElementById('currentRole').value,
+                currentExp: document.getElementById('currentExp').value,
+                prevCompany: document.getElementById('prevCompany').value,
+                prevRole: document.getElementById('prevRole').value,
+                prevExp: document.getElementById('prevExp').value,
+                projectName: document.getElementById('projectName').value,
+                projectDesc: document.getElementById('projectDesc').value,
+                projectRole: document.getElementById('projectRole').value,
+                projectImpact: document.getElementById('projectImpact').value,
+                achievements: document.getElementById('achievements').value,
+                skills: skills
+            };
+        }
+
+        function loadAnswers() {
+            const saved = localStorage.getItem('professionalInterviewData');
+            if (saved) {
+                const data = JSON.parse(saved);
+                document.getElementById('field').value = data.field || '';
+                document.getElementById('strengths').value = data.strengths || '';
+                if (data.companyType) document.querySelector(`input[name="companyType"][value="${data.companyType}"]`).checked = true;
+                document.getElementById('yearsExp').value = data.yearsExp || '';
+                document.getElementById('currentCompany').value = data.currentCompany || '';
+                document.getElementById('currentRole').value = data.currentRole || '';
+                document.getElementById('currentExp').value = data.currentExp || '';
+                document.getElementById('prevCompany').value = data.prevCompany || '';
+                document.getElementById('prevRole').value = data.prevRole || '';
+                document.getElementById('prevExp').value = data.prevExp || '';
+                document.getElementById('projectName').value = data.projectName || '';
+                document.getElementById('projectDesc').value = data.projectDesc || '';
+                document.getElementById('projectRole').value = data.projectRole || '';
+                document.getElementById('projectImpact').value = data.projectImpact || '';
+                document.getElementById('achievements').value = data.achievements || '';
+                skills = data.skills || [];
+                updateSkillsList();
+            }
+        }
+
+        function saveAnswers() {
+            const answers = collectAnswers();
+            localStorage.setItem('professionalInterviewData', JSON.stringify(answers));
+        }
+
+        function submitInterview() {
+            saveAnswers();
+            const answers = collectAnswers();
+            
+            // Create resume data from answers
+            const resumeData = {
+                fullName: localStorage.getItem('userName') || '',
+                email: localStorage.getItem('userEmail') || '',
+                phone: '',
+                location: '',
+                experienceLevel: `${answers.yearsExp} years`,
+                summary: `${answers.field} professional with ${answers.yearsExp} years of experience. Key strengths: ${answers.strengths}. Seeking roles in ${answers.companyType} environments.`,
+                experience: [
+                    {
+                        title: answers.currentRole,
+                        company: answers.currentCompany,
+                        startDate: '',
+                        endDate: 'Present',
+                        description: answers.currentExp
+                    }
+                ].concat(answers.prevCompany ? [{
+                    title: answers.prevRole,
+                    company: answers.prevCompany,
+                    startDate: '',
+                    endDate: '',
+                    description: answers.prevExp
+                }] : []),
+                education: [],
+                skills: answers.skills,
+                projects: [{
+                    name: answers.projectName,
+                    description: `${answers.projectDesc}\n\nRole: ${answers.projectRole}\n\nImpact: ${answers.projectImpact}`
+                }]
+            };
+
+            // Save to localStorage and sessionStorage
+            localStorage.setItem('resumeData', JSON.stringify(resumeData));
+            sessionStorage.setItem('resumeForReview', JSON.stringify(resumeData));
+
+            // Get recommended skills
+            const recommendations = getUniqueRecommendations(answers.skills);
+            localStorage.setItem('skillRecommendations', JSON.stringify(recommendations));
+
+            // Redirect to user home
+            window.location.href = 'user_home.html?interview=professional&redirectTo=resume';
+        }
+
+        // Save before navigating
+        window.addEventListener('beforeunload', saveAnswers);
+    </script>
+</body>
+</html>

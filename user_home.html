@@ -105,6 +105,13 @@
         }
         // redirect if not logged in
         if (!localStorage.getItem('token')) {
+                   } else {
+                       // If coming from interview, redirect to resume builder
+                       const params = new URLSearchParams(window.location.search);
+                       if (params.has('redirectTo') && params.get('redirectTo') === 'resume') {
+                           window.location.href = 'resume.html';
+                           return;
+                       }
             window.location.href = 'login.html';
         } else {
             loadLibrary();

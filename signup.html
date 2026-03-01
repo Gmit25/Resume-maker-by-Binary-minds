@@ -148,7 +148,9 @@
 
             if (result.token) {
                 localStorage.setItem("token", result.token);
-                window.location.href = "user_home.html";
+                localStorage.setItem("userEmail", data.email);
+                localStorage.setItem("userName", data.name);
+                window.location.href = "interview-level.html";
             } else {
                 alert(result.error || "Signup failed");
             }

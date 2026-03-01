@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Your Level - Interview</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            padding: 50px 40px;
+            max-width: 900px;
+            text-align: center;
+        }
+
+        .header {
+            margin-bottom: 50px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            color: #666;
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            color: #555;
+            margin-bottom: 40px;
+            font-weight: 500;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .option-card {
+            background: #f9f9f9;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            padding: 40px 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .option-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .option-card.fresher {
+            background: linear-gradient(135deg, #e8eaf6 0%, #f3e5f5 100%);
+        }
+
+        .option-card.professional {
+            background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);
+        }
+
+        .option-icon {
+            font-size: 4em;
+            margin-bottom: 15px;
+        }
+
+        .option-title {
+            font-size: 1.8em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .option-description {
+            color: #666;
+            font-size: 0.95em;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .option-button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 6px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .option-card.professional .option-button {
+            background: #27ae60;
+        }
+
+        .option-button:hover {
+            opacity: 0.9;
+            transform: scale(1.02);
+        }
+
+        .skip-section {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #eee;
+        }
+
+        .skip-text {
+            color: #999;
+            font-size: 0.95em;
+            margin-bottom: 15px;
+        }
+
+        .skip-button {
+            background: #95a5a6;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .skip-button:hover {
+            background: #7f8c8d;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .options {
+                grid-template-columns: 1fr;
+            }
+
+            .option-icon {
+                font-size: 3em;
+            }
+
+            .option-title {
+                font-size: 1.4em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Welcome to Your Interview!</h1>
+            <p>Let's build your perfect resume based on your experience level</p>
+        </div>
+
+        <div class="subtitle">Which best describes you?</div>
+
+        <div class="options">
+            <!-- Fresher Card -->
+            <div class="option-card fresher">
+                <div class="option-icon">🎓</div>
+                <div class="option-title">Fresher / Beginner</div>
+                <div class="option-description">
+                    Just graduated or have minimal professional experience.
+                    <br><br>
+                    Perfect if you:<br>
+                    • Recently completed college<br>
+                    • Have internship experience<br>
+                    • Building first professional resume
+                </div>
+                <button class="option-button" onclick="goToFresherInterview()">Start Fresher Interview</button>
+            </div>
+
+            <!-- Professional Card -->
+            <div class="option-card professional">
+                <div class="option-icon">💼</div>
+                <div class="option-title">Professional</div>
+                <div class="option-description">
+                    Have industry experience and looking to advance your career.
+                    <br><br>
+                    Perfect if you:<br>
+                    • Have 1+ years of work experience<br>
+                    • Worked on live projects<br>
+                    • Looking for career growth
+                </div>
+                <button class="option-button" onclick="goToProfessionalInterview()">Start Professional Interview</button>
+            </div>
+        </div>
+
+        <div class="skip-section">
+            <div class="skip-text">Not sure? You can get started with resume builder</div>
+            <button class="skip-button" onclick="skipToUserHome()">Skip Interview → Go to Resume Builder</button>
+        </div>
+    </div>
+
+    <script>
+        // Check if user is authenticated
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = 'login.html';
+            }
+        });
+
+        function goToFresherInterview() {
+            window.location.href = 'fresher-interview.html';
+        }
+
+        function goToProfessionalInterview() {
+            window.location.href = 'professional-interview.html';
+        }
+
+        function skipToUserHome() {
+            window.location.href = 'user_home.html';
+        }
+    </script>
+</body>
+</html>

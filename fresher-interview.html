@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fresher Interview - Resume Maker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1em;
+            opacity: 0.9;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e0e0e0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #667eea;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .content {
+            padding: 40px;
+            min-height: 400px;
+        }
+
+        .question-section {
+            display: none;
+        }
+
+        .question-section.active {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .question-number {
+            color: #667eea;
+            font-weight: 600;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+
+        .question-title {
+            font-size: 1.4em;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="date"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus,
+        input[type="date"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .radio-group,
+        .checkbox-group {
+            margin-top: 15px;
+        }
+
+        .radio-option,
+        .checkbox-option {
+            margin-bottom: 12px;
+        }
+
+        .radio-option label,
+        .checkbox-option label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            margin-bottom: 0;
+        }
+
+        .radio-option input[type="radio"],
+        .checkbox-option input[type="checkbox"] {
+            margin-right: 10px;
+            cursor: pointer;
+            width: auto;
+            padding: 0;
+            border: none;
+        }
+
+        .skills-input {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .skill-tag {
+            background: #e8eaf6;
+            color: #667eea;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .skill-tag button {
+            background: none;
+            border: none;
+            color: #667eea;
+            cursor: pointer;
+            font-weight: bold;
+            padding: 0;
+        }
+
+        .skill-input-wrapper {
+            display: flex;
+            gap: 8px;
+        }
+
+        .skill-input-wrapper input {
+            flex: 1;
+        }
+
+        .skill-input-wrapper button {
+            padding: 10px 15px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: space-between;
+            margin-top: 40px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary {
+            background: #95a5a6;
+            color: white;
+            flex: 1;
+        }
+
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+            flex: 1;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+        }
+
+        .btn-disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .summary-section {
+            background: #f9f9f9;
+            padding: 30px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .summary-title {
+            font-size: 1.2em;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .summary-item {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .summary-label {
+            color: #667eea;
+            font-weight: 600;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .summary-value {
+            color: #333;
+            font-size: 1em;
+        }
+
+        .completion-message {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .completion-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        .completion-title {
+            font-size: 1.8em;
+            color: #27ae60;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .completion-text {
+            color: #666;
+            font-size: 1em;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 600px) {
+            .content {
+                padding: 25px;
+            }
+
+            .header h1 {
+                font-size: 1.5em;
+            }
+
+            .question-title {
+                font-size: 1.2em;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎓 Fresher Interview</h1>
+            <p>Let's build your resume step by step</p>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <div class="content">
+            <!-- Q1: Field -->
+            <div class="question-section active" id="q1">
+                <div class="question-number">Question 1 of 7</div>
+                <div class="question-title">What field are you interested in?</div>
+                <div class="form-group">
+                    <label for="field">Select your field:</label>
+                    <select id="field">
+                        <option value="">-- Select --</option>
+                        <option value="Software Development">Software Development</option>
+                        <option value="Data Science">Data Science</option>
+                        <option value="Web Development">Web Development</option>
+                        <option value="Mobile Development">Mobile Development</option>
+                        <option value="Cloud Engineering">Cloud Engineering</option>
+                        <option value="DevOps">DevOps</option>
+                        <option value="UI/UX Design">UI/UX Design</option>
+                        <option value="Product Management">Product Management</option>
+                        <option value="Business Analysis">Business Analysis</option>
+                        <option value="Machine Learning">Machine Learning</option>
+                        <option value="Cybersecurity">Cybersecurity</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Q2: Strengths -->
+            <div class="question-section" id="q2">
+                <div class="question-number">Question 2 of 7</div>
+                <div class="question-title">What are your top 3 strengths?</div>
+                <div class="form-group">
+                    <label for="strengths">Describe your strengths (comma-separated):</label>
+                    <textarea id="strengths" placeholder="e.g., Problem Solving, Communication, Quick Learner"></textarea>
+                </div>
+            </div>
+
+            <!-- Q3: Company Type -->
+            <div class="question-section" id="q3">
+                <div class="question-number">Question 3 of 7</div>
+                <div class="question-title">What kind of company are you interested in?</div>
+                <div class="form-group">
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <label>
+                                <input type="radio" name="companyType" value="Startup">
+                                <span>🚀 Startup - Fast-paced, innovative, wearing multiple hats</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <label>
+                                <input type="radio" name="companyType" value="MNC">
+                                <span>💼 MNC - Established, structured, career growth opportunities</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <label>
+                                <input type="radio" name="companyType" value="Research">
+                                <span>🔬 Research - Innovation-focused, academic, R&D</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q4: College -->
+            <div class="question-section" id="q4">
+                <div class="question-number">Question 4 of 7</div>
+                <div class="question-title">Tell us about your education</div>
+                <div class="form-group">
+                    <label for="college">College/University:</label>
+                    <input type="text" id="college" placeholder="e.g., IIT Delhi, NIT Bangalore">
+                </div>
+                <div class="form-group">
+                    <label for="degree">Degree:</label>
+                    <input type="text" id="degree" placeholder="e.g., B.Tech in Computer Science">
+                </div>
+                <div class="form-group">
+                    <label for="graduation">Expected Graduation Date:</label>
+                    <input type="date" id="graduation">
+                </div>
+                <div class="form-group">
+                    <label for="cgpa">CGPA/Percentage (optional):</label>
+                    <input type="text" id="cgpa" placeholder="e.g., 8.5, 85%">
+                </div>
+            </div>
+
+            <!-- Q5: Projects -->
+            <div class="question-section" id="q5">
+                <div class="question-number">Question 5 of 7</div>
+                <div class="question-title">Have you worked on any projects?</div>
+                <div class="form-group">
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <label>
+                                <input type="radio" name="hasProjects" value="yes" onclick="toggleProjectInput(true)">
+                                <span>Yes, I have projects</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <label>
+                                <input type="radio" name="hasProjects" value="no" onclick="toggleProjectInput(false)">
+                                <span>No, still learning</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div id="projectInput" style="display: none;">
+                    <div class="form-group">
+                        <label for="projectName">Project Name:</label>
+                        <input type="text" id="projectName" placeholder="e.g., E-commerce Platform">
+                    </div>
+                    <div class="form-group">
+                        <label for="projectDesc">Project Description:</label>
+                        <textarea id="projectDesc" placeholder="Briefly describe what you built..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q6: Internships -->
+            <div class="question-section" id="q6">
+                <div class="question-number">Question 6 of 7</div>
+                <div class="question-title">Have you completed any internships?</div>
+                <div class="form-group">
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <label>
+                                <input type="radio" name="hasInternship" value="yes" onclick="toggleInternshipInput(true)">
+                                <span>Yes, I have internship experience</span>
+                            </label>
+                        </div>
+                        <div class="radio-option">
+                            <label>
+                                <input type="radio" name="hasInternship" value="no" onclick="toggleInternshipInput(false)">
+                                <span>No internship experience yet</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div id="internshipInput" style="display: none;">
+                    <div class="form-group">
+                        <label for="internCompany">Company:</label>
+                        <input type="text" id="internCompany" placeholder="e.g., Tech Startup XYZ">
+                    </div>
+                    <div class="form-group">
+                        <label for="internRole">Role/Position:</label>
+                        <input type="text" id="internRole" placeholder="e.g., Software Developer Intern">
+                    </div>
+                    <div class="form-group">
+                        <label for="internDuration">Duration:</label>
+                        <input type="text" id="internDuration" placeholder="e.g., 3 months, June - August 2023">
+                    </div>
+                    <div class="form-group">
+                        <label for="internDesc">What did you do?</label>
+                        <textarea id="internDesc" placeholder="Describe your internship work..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q7: Skills -->
+            <div class="question-section" id="q7">
+                <div class="question-number">Question 7 of 7</div>
+                <div class="question-title">What skills are you learning?</div>
+                <div class="form-group">
+                    <label>Add your skills (press Enter or click Add):</label>
+                    <div class="skill-input-wrapper">
+                        <input type="text" id="skillInput" placeholder="e.g., Python, React, SQL">
+                        <button type="button" onclick="addSkill()">Add</button>
+                    </div>
+                    <div class="skills-input" id="skillsList"></div>
+                </div>
+            </div>
+
+            <!-- Summary -->
+            <div class="question-section" id="summary">
+                <div class="summary-title">📋 Interview Summary</div>
+                <div class="summary-section">
+                    <div class="summary-item">
+                        <div class="summary-label">Field of Interest</div>
+                        <div class="summary-value" id="summaryField">-</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Top Strengths</div>
+                        <div class="summary-value" id="summaryStrengths">-</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Preferred Company Type</div>
+                        <div class="summary-value" id="summaryCompany">-</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Education</div>
+                        <div class="summary-value" id="summaryEducation">-</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Skills</div>
+                        <div class="summary-value" id="summarySkills">-</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="controls">
+                <button class="btn btn-secondary" id="prevBtn" onclick="previousQuestion()" style="display: none;">← Previous</button>
+                <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">Next →</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="skills-correlation.js"></script>
+    <script>
+        let currentQuestion = 1;
+        const totalQuestions = 8; // 7 questions + summary
+        let skills = [];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = 'login.html';
+            }
+            loadAnswers();
+            updateProgress();
+            addEnterKeyListener();
+        });
+
+        function updateProgress() {
+            const progress = (currentQuestion / totalQuestions) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+            
+            // Toggle buttons
+            document.getElementById('prevBtn').style.display = currentQuestion > 1 ? 'block' : 'none';
+            document.getElementById('nextBtn').innerHTML = currentQuestion === totalQuestions ? 'Complete ✓' : 'Next →';
+        }
+
+        function showQuestion(n) {
+            const sections = document.querySelectorAll('.question-section');
+            sections.forEach(section => section.classList.remove('active'));
+            
+            if (n > 0 && n <= sections.length) {
+                sections[n - 1].classList.add('active');
+                window.scrollTo(0, 0);
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestion === totalQuestions) {
+                submitInterview();
+                return;
+            }
+            
+            if (currentQuestion < totalQuestions) {
+                currentQuestion++;
+                showQuestion(currentQuestion);
+                updateProgress();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 1) {
+                currentQuestion--;
+                showQuestion(currentQuestion);
+                updateProgress();
+            }
+        }
+
+        function toggleProjectInput(show) {
+            document.getElementById('projectInput').style.display = show ? 'block' : 'none';
+        }
+
+        function toggleInternshipInput(show) {
+            document.getElementById('internshipInput').style.display = show ? 'block' : 'none';
+        }
+
+        function addSkill() {
+            const input = document.getElementById('skillInput');
+            const skill = input.value.trim();
+            
+            if (skill && !skills.includes(skill)) {
+                skills.push(skill);
+                updateSkillsList();
+                input.value = '';
+            }
+        }
+
+        function removeSkill(skill) {
+            skills = skills.filter(s => s !== skill);
+            updateSkillsList();
+        }
+
+        function updateSkillsList() {
+            const container = document.getElementById('skillsList');
+            container.innerHTML = skills.map(skill => 
+                `<div class="skill-tag">${skill} <button type="button" onclick="removeSkill('${skill}')">×</button></div>`
+            ).join('');
+        }
+
+        function addEnterKeyListener() {
+            document.getElementById('skillInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    addSkill();
+                }
+            });
+        }
+
+        function collectAnswers() {
+            return {
+                field: document.getElementById('field').value,
+                strengths: document.getElementById('strengths').value,
+                companyType: document.querySelector('input[name="companyType"]:checked')?.value || '',
+                college: document.getElementById('college').value,
+                degree: document.getElementById('degree').value,
+                graduation: document.getElementById('graduation').value,
+                cgpa: document.getElementById('cgpa').value,
+                projectName: document.getElementById('projectName').value,
+                projectDesc: document.getElementById('projectDesc').value,
+                hasProjects: document.querySelector('input[name="hasProjects"]:checked')?.value || 'no',
+                internCompany: document.getElementById('internCompany').value,
+                internRole: document.getElementById('internRole').value,
+                internDuration: document.getElementById('internDuration').value,
+                internDesc: document.getElementById('internDesc').value,
+                hasInternship: document.querySelector('input[name="hasInternship"]:checked')?.value || 'no',
+                skills: skills
+            };
+        }
+
+        function loadAnswers() {
+            const saved = localStorage.getItem('fresherInterviewData');
+            if (saved) {
+                const data = JSON.parse(saved);
+                document.getElementById('field').value = data.field || '';
+                document.getElementById('strengths').value = data.strengths || '';
+                if (data.companyType) document.querySelector(`input[name="companyType"][value="${data.companyType}"]`).checked = true;
+                document.getElementById('college').value = data.college || '';
+                document.getElementById('degree').value = data.degree || '';
+                document.getElementById('graduation').value = data.graduation || '';
+                document.getElementById('cgpa').value = data.cgpa || '';
+                document.getElementById('projectName').value = data.projectName || '';
+                document.getElementById('projectDesc').value = data.projectDesc || '';
+                if (data.hasProjects) document.querySelector(`input[name="hasProjects"][value="${data.hasProjects}"]`).checked = true;
+                toggleProjectInput(data.hasProjects === 'yes');
+                document.getElementById('internCompany').value = data.internCompany || '';
+                document.getElementById('internRole').value = data.internRole || '';
+                document.getElementById('internDuration').value = data.internDuration || '';
+                document.getElementById('internDesc').value = data.internDesc || '';
+                if (data.hasInternship) document.querySelector(`input[name="hasInternship"][value="${data.hasInternship}"]`).checked = true;
+                toggleInternshipInput(data.hasInternship === 'yes');
+                skills = data.skills || [];
+                updateSkillsList();
+            }
+        }
+
+        function saveAnswers() {
+            const answers = collectAnswers();
+            localStorage.setItem('fresherInterviewData', JSON.stringify(answers));
+        }
+
+        function updateSummary() {
+            const answers = collectAnswers();
+            document.getElementById('summaryField').textContent = answers.field || 'Not specified';
+            document.getElementById('summaryStrengths').textContent = answers.strengths || 'Not specified';
+            document.getElementById('summaryCompany').textContent = answers.companyType || 'Not specified';
+            
+            const edu = `${answers.college || 'N/A'} - ${answers.degree || 'N/A'}`;
+            document.getElementById('summaryEducation').textContent = edu;
+            document.getElementById('summarySkills').textContent = answers.skills.join(', ') || 'No skills added yet';
+        }
+
+        function submitInterview() {
+            saveAnswers();
+            const answers = collectAnswers();
+            
+            // Create resume data from answers
+            const resumeData = {
+                fullName: localStorage.getItem('userName') || '',
+                email: localStorage.getItem('userEmail') || '',
+                phone: '',
+                location: '',
+                experienceLevel: 'fresher',
+                summary: `A ${answers.field} enthusiast with strengths in ${answers.strengths}. Interested in working with ${answers.companyType} companies.`,
+                experience: answers.hasInternship === 'yes' ? [{
+                    title: answers.internRole,
+                    company: answers.internCompany,
+                    startDate: answers.internDuration.split('-')[0]?.trim() || '',
+                    endDate: answers.internDuration.split('-')[1]?.trim() || '',
+                    description: answers.internDesc
+                }] : [],
+                education: [{
+                    school: answers.college,
+                    degree: answers.degree,
+                    graduationDate: answers.graduation,
+                    details: answers.cgpa ? `CGPA: ${answers.cgpa}` : ''
+                }],
+                skills: answers.skills,
+                projects: answers.hasProjects === 'yes' ? [{
+                    name: answers.projectName,
+                    description: answers.projectDesc
+                }] : []
+            };
+
+            // Save to localStorage and sessionStorage
+            localStorage.setItem('resumeData', JSON.stringify(resumeData));
+            sessionStorage.setItem('resumeForReview', JSON.stringify(resumeData));
+
+            // Get recommended skills
+            const recommendations = getUniqueRecommendations(answers.skills);
+            localStorage.setItem('skillRecommendations', JSON.stringify(recommendations));
+
+            // Redirect to user home
+            window.location.href = 'user_home.html?interview=fresher&redirectTo=resume';
+        }
+
+        // Save before navigating
+        window.addEventListener('beforeunload', saveAnswers);
+    </script>
+</body>
+</html>
