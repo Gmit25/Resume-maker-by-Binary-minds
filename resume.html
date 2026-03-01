@@ -677,7 +677,7 @@
         async function loadProfile() {
             const token = localStorage.getItem('token');
             if (!token) return;
-            const res = await fetch('http://localhost:5000/api/profile', {
+            const res = await fetch('/api/profile', {
                 headers: { 'Authorization': 'Bearer ' + token }
             });
             if (res.ok) {
@@ -994,28 +994,7 @@
             URL.revokeObjectURL(url);
         }
 
-        // Function to send resume data to backend API
-        async function saveResume() {
-            const resumeData = {
-                name: document.getElementById("name").value,
-                email: document.getElementById("email").value,
-                phone: document.getElementById("phone").value,
-                education: document.getElementById("education").value,
-                experience: document.getElementById("experience").value,
-                skills: document.getElementById("skills").value.split(",")
-            };
-
-            const response = await fetch("http://localhost:5000/api/resume", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(resumeData)
-            });
-
-            const result = await response.json();
-            alert(result.message);
-        }
+        // (legacy saveResume removed) resume saving handled by authenticated saveResume()
 
         // Save current resume to backend
         async function saveResume() {
@@ -1029,7 +1008,7 @@
             if (!title) return;
 
             const payload = extractResumeData();
-            const res = await fetch('http://localhost:5000/api/resume', {
+            const res = await fetch('/api/resume', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -1050,7 +1029,7 @@
         async function fetchResumes() {
             const token = localStorage.getItem('token');
             if (!token) return;
-            const res = await fetch('http://localhost:5000/api/resumes', {
+            const res = await fetch('/api/resumes', {
                 headers: { 'Authorization': 'Bearer ' + token }
             });
             if (!res.ok) return;
@@ -1071,7 +1050,7 @@
         async function loadResume(id) {
             const token = localStorage.getItem('token');
             if (!token) return;
-            const res = await fetch(`http://localhost:5000/api/resumes/${id}`, {
+            const res = await fetch(`/api/resumes/${id}`, {
                 headers: { 'Authorization': 'Bearer ' + token }
             });
             if (!res.ok) return;

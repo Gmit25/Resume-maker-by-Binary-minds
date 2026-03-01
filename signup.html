@@ -137,20 +137,37 @@
                 return;
             }
 
-            const res = await fetch('http://localhost:5000/api/signup', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, phone, email, linkedIn, github, city, state, password })
-            });
-            if (!res.ok) {
-                const err = await res.json();
-                alert(err.message || 'Signup failed');
-                return;
+            try {
+                console.log('Sending signup request...');
+                const res = await fetch('/api/signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, phone, email, linkedIn, github, city, state, password })
+                });
+                
+                console.log('Response status:', res.status);
+                console.log('Response ok:', res.ok);
+                
+                const data = await res.json();
+                console.log('Response data:', data);
+                
+                if (!res.ok) {
+                    alert(data.message || 'Signup failed');
+                    return;
+                }
+                
+                if (data.token) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('signedUp', 'true');
+                    console.log('Token saved, redirecting...');
+                    window.location.href = 'user_home.html';
+                } else {
+                    alert('No token received from server');
+                }
+            } catch (err) {
+                console.error('Signup error:', err);
+                alert('Network error: ' + err.message);
             }
-            const { token } = await res.json();
-            localStorage.setItem('token', token);
-            localStorage.setItem('signedUp', 'true');
-            window.location.href = 'user_home.html';
         }
     </script>
 </body>

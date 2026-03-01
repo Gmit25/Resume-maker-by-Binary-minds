@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const path = require('path');
 
 const authRoutes = require('./routes/auth');
 const resumeRoutes = require('./routes/resumes');
@@ -10,6 +11,9 @@ const profileRoutes = require('./routes/profile');
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// Serve frontend static files from project root
+app.use(express.static(path.join(__dirname, '..')));
 
 // authentication routes (signup, login)
 app.use('/api', authRoutes);
