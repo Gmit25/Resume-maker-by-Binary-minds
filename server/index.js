@@ -27,10 +27,8 @@ app.get('/', (req, res) => res.json({ ok: true, message: 'Resume Maker API' }));
 
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/resume-maker';
 
-mongoose.connect(MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-}).then(() => console.log('MongoDB connected'))
+mongoose.connect(MONGODB_URI)
+  .then(() => console.log('MongoDB connected'))
   .catch(err => console.error('MongoDB connection error:', err));
 
 const PORT = process.env.PORT || 5000;

@@ -7,7 +7,7 @@ const router = express.Router();
 
 // POST /api/auth/signup
 router.post('/signup', async (req, res) => {
-  const { name, phone, email, linkedIn, github, city, state, password } = req.body;
+  const { name, phone, email, linkedin, github, city, state, password } = req.body;
   if (!name || !phone || !email || !password) {
     return res.status(400).json({ message: 'Missing required fields' });
   }
@@ -17,7 +17,7 @@ router.post('/signup', async (req, res) => {
     if (user) return res.status(409).json({ message: 'Email already in use' });
 
     const hash = await bcrypt.hash(password, 10);
-    user = new User({ name, phone, email, linkedIn, github, city, state, password: hash });
+    user = new User({ name, phone, email, linkedin, github, city, state, password: hash });
     await user.save();
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });

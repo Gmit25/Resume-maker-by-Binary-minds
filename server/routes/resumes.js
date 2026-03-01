@@ -41,4 +41,18 @@ router.get('/:id', auth, async (req, res) => {
   }
 });
 
+// DELETE /api/resumes/:id - delete resume if it belongs to user
+router.delete('/:id', auth, async (req, res) => {
+  try {
+    const resume = await Resume.findById(req.params.id);
+    if (!resume) return res.sendStatus(404);
+    if (resume.userId.toString() !== req.userId) return res.sendStatus(403);
+    await Resume.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Resume deleted successfully' });
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
+});
+
 module.exports = router;
